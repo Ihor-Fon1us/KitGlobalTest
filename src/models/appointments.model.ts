@@ -1,13 +1,29 @@
-import { model, Schema } from 'mongoose';
+import { Model, model, Schema } from 'mongoose';
 import { v4 as uuid } from 'uuid';
-import { IAppointment } from './interfaces/IAppointments';
+import { IAppointment, IAppointmentMethods } from '../interfaces/IAppointments';
 
-const appointmentSchema = new Schema<IAppointment>({
+type AppointmentModel = Model<IAppointment, {}, IAppointmentMethods>;
+
+const appointmentSchema = new Schema<IAppointment, AppointmentModel, IAppointmentMethods>({
     id: { type: String, default: () => uuid() },
     user: { type: String, required: true },
     doctor: { type: String, required: true },
-    date: { type: Date, required: true },
+    date: { 
+        type: Date,
+        required: true,
+        validate: {
+            validator: (v: Date) => {
+                return v > new Date();
+            },
+            message: props => `${props.value} is not a valid date`,
+        },
+     },
     active: { type: Boolean, default: true},
 });
 
-export const AppointmentModel = model<IAppointment>('User', appointmentSchema);
+appointmentSchema.method('deactivation', function() {
+    this.active = false;
+    return this.save();
+})
+
+export const AppointmentModel = model<IAppointment, AppointmentModel>('Appointment', appointmentSchema);

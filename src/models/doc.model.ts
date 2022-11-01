@@ -1,7 +1,7 @@
 import { Schema, model, connect } from 'mongoose';
 import { v4 as uuid } from 'uuid';
-import { IAppointment } from './interfaces/IAppointments';
-import { IDoc } from './interfaces/IDoc';
+import { IAppointment } from '../interfaces/IAppointments';
+import { IDoc } from '../interfaces/IDoc';
 
 
 const docSchema = new Schema<IDoc>({
@@ -34,13 +34,15 @@ const docSchema = new Schema<IDoc>({
     type: { type: String, required: true },
     spec: { type: String, required: true },
     free: { type: Boolean, required: true },
-    appointments_accepted: [{
-        id: String,
-        user: String,
-        doctor: String,
-        date: Date,
-        active: Boolean,
-    }],
+    appointments_accepted: {
+        type: [{
+            id: String,
+            user: String,
+            doctor: String,
+            date: Date,
+            active: Boolean,
+        }],
+    },
 });
 
-export const DocModel = model<IDoc>('User', docSchema);
+export const DocModel = model<IDoc>('Doc', docSchema);

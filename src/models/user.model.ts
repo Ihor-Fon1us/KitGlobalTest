@@ -1,9 +1,11 @@
-import { Schema, model } from 'mongoose';
+import { Schema, model, Model } from 'mongoose';
 import { v4 as uuid } from 'uuid';
-import { IUser } from './interfaces/IUser';
+import { IAppointment } from '../interfaces/IAppointments';
+import { IUser, IUserMethods } from '../interfaces/IUser';
 
+type UserModel = Model<IUser, {}, IUserMethods>;
 
-const userSchema = new Schema<IUser>({
+const userSchema = new Schema<IUser, UserModel, IUserMethods>({
     id: { type: String, default: () => uuid() },
     email: {
         type: String,
@@ -30,7 +32,10 @@ const userSchema = new Schema<IUser>({
         },
     },
     name: { type: String, required: true },
-    type: { type: String, required: true },
+    type: { 
+        type: String,
+        required: true,
+     },
     appointments: [{
         id: String,
         user: String,
@@ -40,4 +45,9 @@ const userSchema = new Schema<IUser>({
     }],
 });
 
-export const UserModel = model<IUser>('User', userSchema);
+userSchema.method('addAppointment', function(data: IAppointment) {
+    this.appointments.push(data);
+    return this.save();
+})
+
+export const UserModel = model<IUser, UserModel>('User', userSchema);

@@ -5,3 +5,7 @@ export interface IAppointment {
     date: Date;
     active: boolean;
 }
+
+export interface IAppointmentMethods {
+    deactivation(): IAppointment;
+}

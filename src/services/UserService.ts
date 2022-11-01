@@ -1,5 +1,5 @@
-import { IAppointment } from "../models/interfaces/IAppointments";
-import { IUser } from "../models/interfaces/IUser";
+import { IAppointment } from "../interfaces/IAppointments";
+import { IUser } from "../interfaces/IUser";
 import { UserModel } from "../models/user.model";
 
 export class UserService {
@@ -16,11 +16,8 @@ export class UserService {
     static async addAppointment(id: string, data: IAppointment) {
 
         const user = await UserService.getById(id);
-        if(!user) return
-        if (data) {
-            user.appointments.push(data);
-        }
-        return user.save();
+        if(!user) return 
+        return user.addAppointment(data);
     }
 
 }

@@ -1,14 +1,17 @@
 import express, { Express, Request, Response, Router } from 'express';
-import { createAppointment } from '../controllers/AppointmentsController';
-import { createDoctor } from '../controllers/DocController';
-import { createUser } from '../controllers/UserController';
+import { createAppointment, acceptAppointment } from '../controllers/AppointmentsController';
+import { sendNotification } from '../controllers/NotificationsController';
+import { createUser } from '../controllers/RegController';
+import { writer } from '../middleware/writer';
 
 const router: Router = express.Router();
 
-router.post('/regUser', createUser);
+router.post('/reg', createUser, writer);
 
-router.post('/regDoc', createDoctor);
+router.post('/regAppointment', createAppointment, writer);
 
-router.post('/regAppointments', createAppointment);
+router.get('/acceptAppointment', acceptAppointment, writer);
+
+router.get('/notifications', sendNotification, writer)
 
 module.exports = router;

@@ -1,12 +1,13 @@
-
-
 import { app } from '../index';
 import http from 'http';
+import mongoose from 'mongoose';
 
-const port = process.env.PORT || '3000';
+import config from './config';
+
+const port = config.serverPort;
 app.set('port', port);
 
-var server = http.createServer(app);
+const server = http.createServer(app);
 
 server.listen(port);
 server.on('error', onError);
@@ -21,7 +22,6 @@ function onError(error) {
     ? 'Pipe ' + port
     : 'Port ' + port;
 
-  // handle specific listen errors with friendly messages
   switch (error.code) {
     case 'EACCES':
       console.error(bind + ' requires elevated privileges');
@@ -42,3 +42,11 @@ function onListening() {
     ? 'pipe ' + addr
     : 'port ' + addr?.port;
 }
+
+const connection = mongoose.connect(config.mongodb.url);
+
+connection.then(() => {
+  console.log('Connected to mongodb');
+}).catch((err) => {
+  console.log('Error connecting to mongodb: ' + err);
+});

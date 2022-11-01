@@ -1,6 +1,6 @@
 import { DocModel } from "../models/doc.model";
-import { IAppointment } from "../models/interfaces/IAppointments";
-import { IDoc } from "../models/interfaces/IDoc";
+import { IAppointment } from "../interfaces/IAppointments";
+import { IDoc } from "../interfaces/IDoc";
 
 export class DocService {
 
